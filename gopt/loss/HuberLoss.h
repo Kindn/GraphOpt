@@ -16,7 +16,7 @@ namespace gopt {
 
 struct HuberLoss : public LossFunctionBase, public std::enable_shared_from_this<HuberLoss> {
 public: 
-    HuberLoss(double delta) : 
+    HuberLoss(double delta = 1.) : 
     LossFunctionBase(), 
     delta_(delta) {
         assert(delta_ > std::numeric_limits<double>::epsilon() && 

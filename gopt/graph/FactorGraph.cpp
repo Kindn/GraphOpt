@@ -45,7 +45,7 @@ Eigen::MatrixXd FactorGraph::Edge::getInformation() const {
 void FactorGraph::Edge::computeJacobians() {
     jacobians_.resize(vertices_.size());
 
-    const double delta = static_cast<double>(1e-6);
+    const double delta = static_cast<double>(1e-9);
     const double scale = 1.0 / (2.0 * delta);
     Eigen::VectorXd residual;
     for (int i = 0; i < jacobians_.size(); ++i) {

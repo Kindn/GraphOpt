@@ -165,7 +165,7 @@ void solveBA(BALProblem &bal_problem) {
     std::cout << "Set opt config. " << std::endl;
     gopt::optimization_config_t config;
     config.verbose = true;
-    config.max_iteration_num = 50;
+    config.max_iteration_num = 100;
     graph.setOptConfig(config);
 
     // Add the vertices
@@ -192,6 +192,9 @@ void solveBA(BALProblem &bal_problem) {
         graph.addVertex(v);
         v_p.push_back(v);
     }
+    
+    std::cout << "num_cameras: " << bal_problem.num_cameras() << ", " 
+              << "num_points: " << bal_problem.num_points() << std::endl;
 
     // Add the edges
     std::cout << "Add the edges. " << std::endl;
@@ -202,7 +205,7 @@ void solveBA(BALProblem &bal_problem) {
         edge->setVertex(1, v_p[bal_problem.point_index()[i]]);
         edge->setMeasurement(Eigen::Vector2d(observations[2 * i + 0], observations[2 * i + 1]));
         edge->setInformation(Eigen::Matrix2d::Identity());
-        edge->setLossFunction(std::make_shared<gopt::HuberLoss>(10));
+        edge->setLossFunction(std::make_shared<gopt::HuberLoss>());
         if (!graph.addEdge(edge)) std::cout << "Failed to add edge for observation " << i << std::endl;
     }
 
