@@ -1,4 +1,4 @@
-add_library(graph SHARED
+add_library(${LIB_NAME}_graph SHARED
     FactorGraph.cpp FactorGraph.h 
     BaseVertex.h
     BaseEdge.h
@@ -6,7 +6,7 @@ add_library(graph SHARED
     BaseUnaryEdge.h 
 )
 
-target_link_libraries(graph 
-    solver 
-    util
+target_link_libraries(${LIB_NAME}_graph 
+${LIB_NAME}_solver 
+${LIB_NAME}_util
 )

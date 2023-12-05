@@ -5,6 +5,7 @@ set(CMAKE_BUILD_TYPE "Release")
 set(CMAKE_CXX_FLAGS "-std=c++17")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -Wall -g -march=native")
 set(BUILD_EXAMPLES 1)
+set(LIB_NAME "gopt")
 
 find_package(Eigen3 REQUIRED)
 if (Eigen3_FOUND)

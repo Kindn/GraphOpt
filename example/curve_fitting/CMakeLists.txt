@@ -10,4 +10,4 @@ include_directories(
 
 message("Add example ${PROJECT_NAME}")
 add_executable(${PROJECT_NAME} curve_fitting.cpp)
-target_link_libraries(${PROJECT_NAME} util solver graph)
+target_link_libraries(${PROJECT_NAME} ${LIB_NAME}_util ${LIB_NAME}_solver ${LIB_NAME}_graph)

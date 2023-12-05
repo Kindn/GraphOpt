@@ -29,5 +29,5 @@ target_link_libraries(bundle_adjustment_ceres ${CERES_LIBRARIES} bal_common)
 target_link_libraries(bundle_adjustment_g2o ${G2O_LIBS} bal_common)
 
 add_executable(bundle_adjustment bundle_adjustment.cpp)
-target_link_libraries(bundle_adjustment util solver loss graph bal_common)
+target_link_libraries(bundle_adjustment ${LIB_NAME}_util ${LIB_NAME}_solver ${LIB_NAME}_loss ${LIB_NAME}_graph bal_common)
 
