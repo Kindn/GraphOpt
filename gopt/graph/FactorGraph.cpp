@@ -30,7 +30,7 @@ Eigen::MatrixXd FactorGraph::Edge::getJacobian(size_t i) const {
 // }
 
 void FactorGraph::Edge::setInformation(const Eigen::MatrixXd &info) {
-    assert(info.rows() == dimension_ && info.cols() == dimension_ && "Dimensions of information mismatche. "); 
+    assert(static_cast<size_t>(info.rows()) == dimension_ && static_cast<size_t>(info.cols()) == dimension_ && "Dimensions of information mismatch. "); 
     information_ = info;
 }
 
@@ -48,7 +48,7 @@ void FactorGraph::Edge::computeJacobians() {
     const double delta = static_cast<double>(1e-9);
     const double scale = 1.0 / (2.0 * delta);
     Eigen::VectorXd residual;
-    for (int i = 0; i < jacobians_.size(); ++i) {
+    for (size_t i = 0; i < jacobians_.size(); ++i) {
         if (vertices_[i]->isSetFixed()) {
             continue;
         }
@@ -58,8 +58,8 @@ void FactorGraph::Edge::computeJacobians() {
         jacobians_[i] = Eigen::MatrixXd::Zero(dimension_, dim_v);
 
         Eigen::VectorXd update = Eigen::VectorXd::Zero(dim_v);
-        for (int j = 0; j < dim_v; ++j) {
-            update(j) = delta;
+        for (size_t j = 0; j < dim_v; ++j) {
+            update(static_cast<Eigen::Index>(j)) = delta;
             v->push();
             v->plus(update);
             computeResidual();
@@ -71,7 +71,7 @@ void FactorGraph::Edge::computeJacobians() {
             residual -= residual_;
             v->pop();
             
-            jacobians_[i].col(j) = scale * residual;
+            jacobians_[i].col(static_cast<Eigen::Index>(j)) = scale * residual;
             update.setZero();
         }
     }
@@ -121,7 +121,7 @@ int FactorGraph::optimize() {
     double last_cost; 
     TicToc tic_toc;
     double cum_time = 0;
-    for (int iter = 0; iter < opt_config_.max_iteration_num; ++iter) {
+    for (size_t iter = 0; iter < opt_config_.max_iteration_num; ++iter) {
         if (opt_config_.verbose) {
             tic_toc.tic();
         }
