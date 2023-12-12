@@ -1,5 +1,5 @@
 /*
- * filename: GaussNewtonSparseSolver.h
+ * filename: GaussNewtonSparseShurSolver.h
  * author:   Peiyan Liu, HITSZ
  * E-mail:   1434615509@qq.com
  * brief:    
@@ -19,12 +19,12 @@ namespace gopt {
  * Bundle-Adjustment problem. All the edges in the graph should be binary edge, and
  * each of them should connect a marginalized vertex and a in-marginalized vertex.
 */
-class GaussNewtonSparseSolver : public OptSolverBase, public std::enable_shared_from_this<GaussNewtonSparseSolver> {
+class GaussNewtonSparseShurSolver : public OptSolverBase, public std::enable_shared_from_this<GaussNewtonSparseShurSolver> {
     friend class FactorGraph;
 public: 
-    GaussNewtonSparseSolver(): 
+    GaussNewtonSparseShurSolver(): 
     OptSolverBase() {}
-    virtual ~GaussNewtonSparseSolver() {}
+    virtual ~GaussNewtonSparseShurSolver() {}
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 

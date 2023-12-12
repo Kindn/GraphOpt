@@ -5,8 +5,8 @@
 #include "graph/BaseVertex.h"
 #include "solver/GaussNewtonSolver.h"
 #include "solver/GaussNewtonShurSolver.h"
-#include "solver/GaussNewtonSparseSolver.h"
-#include "solver/LevenbergMarquartSparseSolver.h"
+#include "solver/GaussNewtonSparseShurSolver.h"
+#include "solver/LevenbergMarquartSparseShurSolver.h"
 #include "loss/HuberLoss.h"
 #include "util/TicToc.h"
 
@@ -158,7 +158,7 @@ void solveBA(BALProblem &bal_problem) {
     double *cameras = bal_problem.mutable_cameras();
 
     std::cout << "Set solver. " << std::endl;
-    gopt::LevenbergMarquartSparseSolver solver;
+    gopt::LevenbergMarquartSparseShurSolver solver;
     gopt::FactorGraph graph;
     graph.setOptSolver(&solver);
 

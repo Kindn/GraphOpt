@@ -6,8 +6,8 @@
 #include "graph/BaseVertex.h"
 #include "solver/GaussNewtonSolver.h"
 #include "solver/GaussNewtonShurSolver.h"
-#include "solver/GaussNewtonSparseSolver.h"
-#include "solver/LevenbergMarquartSparseSolver.h"
+#include "solver/GaussNewtonSparseShurSolver.h"
+#include "solver/LevenbergMarquartSparseShurSolver.h"
 #include "util/TicToc.h"
 
 struct CurveFittingVertex : public gopt::BaseVertex<3, Eigen::Vector3d> {
@@ -74,7 +74,7 @@ int main(int argc, char **argv) {
     }
 
     std::cout << "Set solver. " << std::endl;
-    gopt::LevenbergMarquartSparseSolver solver;
+    gopt::LevenbergMarquartSparseShurSolver solver;
     gopt::FactorGraph graph;
     graph.setOptSolver(&solver);
 

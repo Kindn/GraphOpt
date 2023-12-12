@@ -1,15 +1,15 @@
 /*
- * filename: LevenbergMarquartSparseSolver.cpp
+ * filename: GaussNewtonSparseShurSolver.cpp
  * author:   Peiyan Liu, HITSZ
  * E-mail:   1434615509@qq.com
  * brief:    
  */
 
-#include "solver/LevenbergMarquartSparseSolver.h"
+#include "solver/GaussNewtonSparseShurSolver.h"
 
 namespace gopt {
 
-void LevenbergMarquartSparseSolver::setGraph(FactorGraph *graph) {
+void GaussNewtonSparseShurSolver::setGraph(FactorGraph *graph) {
     OptSolverBase::setGraph(graph);
 
     dim_res_ = graph_->getDimResidual();
@@ -32,21 +32,18 @@ void LevenbergMarquartSparseSolver::setGraph(FactorGraph *graph) {
     Hrr_Shur_.resize(dim_r_, dim_r_);
     Hmm_inv_.resize(dim_marg_, dim_marg_);
     Hrm_.resize(dim_r_, dim_marg_);
-    Irr_.resize(dim_r_, dim_r_), Irr_.setIdentity();
-    Imm_.resize(dim_marg_, dim_marg_), Imm_.setIdentity();
     bmm_ = Eigen::VectorXd::Zero(dim_marg_);
     brr_ = Eigen::VectorXd::Zero(dim_r_);
 }
 
 
-int LevenbergMarquartSparseSolver::solve(Eigen::VectorXd &delta, double &cost, Eigen::VectorXd &residual) {
+int GaussNewtonSparseShurSolver::solve(Eigen::VectorXd &delta, double &cost, Eigen::VectorXd &residual) {
     assert(graph_ != nullptr && "Graph should not be null. ");
 
     // Compute Jacobian
     residual.resize(dim_res_);
     cost = 0.0;
     FactorGraph::EdgeSet edges = graph_->getEdges();
-    
     Hmm_blocks_.clear(), Hrr_blocks_.clear(), Hrm_blocks_.clear();
     Hmm_blocks_.reserve(num_marg_);
     Hrr_blocks_.reserve(graph_->getNumVertices() - num_marg_);
@@ -54,6 +51,7 @@ int LevenbergMarquartSparseSolver::solve(Eigen::VectorXd &delta, double &cost, E
     bmm_.setZero(), brr_.setZero();
     Hrr_.setZero(), Hmm_inv_.setZero(), Hrm_.setZero();
     // std::cout << "edge number: " << edges.size() << std::endl;
+    int count = 0;
     for (auto &id_edge : edges) {
         FactorGraph::EdgePtr edge = id_edge.second;
         size_t block_id = edge->getBlockId();
@@ -72,26 +70,12 @@ int LevenbergMarquartSparseSolver::solve(Eigen::VectorXd &delta, double &cost, E
 
         // Build block system
         buildBlockSystem(edge, info, loss_grad);
+        ++count;
     }
-
-    if (init_) {
-        computeInitLambda();
-        nu_ = 2.0;
-        std::cout << __PRETTY_FUNCTION__ << ": initial lambda: " << lambda_ << std::endl;
-    }
-
-    update_flag_ = false;
-    bool success;
-    do {
-        // Solve the block system
-        std::cout << "Solving block system ... lambda = " << lambda_ << ", rho = " << rho_ << std::endl;
-        success = solveBlockSystemShur(delta);
-        // update lamda_ and nu_
-        updateLambdaAndNu(cost, delta);
-        if (!std::isfinite(lambda_)) {
-            break;
-        }
-    } while (!update_flag_);
+    
+    // Solve the block system
+    std::cout << "Solving block system ... " << std::endl;
+    bool success = solveBlockSystemShur(delta);
 
     if (!success) {
         return 1;
@@ -101,17 +85,17 @@ int LevenbergMarquartSparseSolver::solve(Eigen::VectorXd &delta, double &cost, E
     }
 }
 
-void LevenbergMarquartSparseSolver::buildBlockSystem(const FactorGraph::EdgePtr & edge, 
+void GaussNewtonSparseShurSolver::buildBlockSystem(const FactorGraph::EdgePtr & edge, 
                                           const Eigen::MatrixXd &info, 
                                           double loss_grad) {
-    for (int i = 0; i < edge->vertices_.size(); ++i) {
+    for (size_t i = 0; i < edge->vertices_.size(); ++i) {
         auto vi = edge->vertices_[i];
         size_t vi_block_id = vi->getBlockId();
         if (vi->isSetFixed()) {
             continue;
         }
 
-        for (int j = i; j < edge->vertices_.size(); ++j) {
+        for (size_t j = i; j < edge->vertices_.size(); ++j) {
             auto vj = edge->vertices_[j];
             size_t vj_block_id = vj->getBlockId();
             if (vj->isSetFixed()) {
@@ -180,12 +164,11 @@ void LevenbergMarquartSparseSolver::buildBlockSystem(const FactorGraph::EdgePtr 
     }
 }
 
-bool LevenbergMarquartSparseSolver::solveBlockSystemShur(Eigen::VectorXd &delta) {
+bool GaussNewtonSparseShurSolver::solveBlockSystemShur(Eigen::VectorXd &delta) {
     // Compute the inverse of Hrr
     Hmm_inv_blocks_.reserve(Hmm_blocks_.size());
     for (auto &block : Hmm_blocks_) {
-        Hmm_inv_blocks_[block.first] = 
-            (block.second + lambda_ * Eigen::MatrixXd::Identity(block.second.rows(), block.second.rows())).inverse();
+        Hmm_inv_blocks_[block.first] = block.second.inverse();
     }
 
     // Compute Shur complement
@@ -195,7 +178,7 @@ bool LevenbergMarquartSparseSolver::solveBlockSystemShur(Eigen::VectorXd &delta)
     // Solve for delta
     if (dim_marg_ > 0) {
         if (dim_r_ > 0) {
-            Hrr_Shur_ = Hrr_ + lambda_ * Irr_ - Hrm_ * Hmm_inv_ * SpMatType(Hrm_.transpose());
+            Hrr_Shur_ = Hrr_ - Hrm_ * Hmm_inv_ * SpMatType(Hrm_.transpose());
             brr_Shur_ = brr_ - Hrm_ * Hmm_inv_ * bmm_;
             if (init_) {
                 Hrr_Shur_Chol_.analyzePattern(Hrr_Shur_);
@@ -247,7 +230,7 @@ bool LevenbergMarquartSparseSolver::solveBlockSystemShur(Eigen::VectorXd &delta)
     return true;
 }
 
-void LevenbergMarquartSparseSolver::fillSparseMatrices() {
+void GaussNewtonSparseShurSolver::fillSparseMatrices() {
     std::vector<Eigen::Triplet<double>> triplets;
     triplets.reserve(dim_r_);
     for (typename std::unordered_map<size_t, Eigen::MatrixXd>::const_iterator it = Hrr_blocks_.begin(); 
@@ -288,74 +271,4 @@ void LevenbergMarquartSparseSolver::fillSparseMatrices() {
     Hrm_.setFromTriplets(triplets.begin(), triplets.end());
 }
 
-void LevenbergMarquartSparseSolver::updateLambdaAndNu(double cost, const Eigen::VectorXd &delta) {
-    if (true) {
-        double new_cost = computeNewCost(delta);
-        double delta_cost = new_cost - cost;
-        double approx_delta_cost = 
-            delta.head(dim_var_ - dim_marg_).dot(-brr_) + delta.tail(dim_marg_).dot(-bmm_) - 
-            lambda_ * delta.norm();
-        approx_delta_cost += 1e-6;
-
-        rho_ = delta_cost / approx_delta_cost;
-
-        if (rho_ > 0 && std::isfinite(new_cost)) {
-            update_flag_ = true;
-            double scale = std::min(lambda_scale_upper_, 1.0 - std::pow(2.0 * rho_ - 1.0, 3));
-            lambda_ *= std::max(lambda_scale_lower_, scale);
-            nu_ = 2.0;
-        } else {
-            update_flag_ = false;
-            lambda_ *= nu_;
-            nu_ *= 2.0;
-        }
-    }
 }
-
-double LevenbergMarquartSparseSolver::computeNewCost(const Eigen::VectorXd &delta) {
-    FactorGraph::EdgeSet edges = graph_->getEdges();
-    FactorGraph::VertexSet vertices = graph_->getVertices();
-
-    for (auto &v : vertices) {
-        if (!v.second->isSetFixed()) {
-            v.second->push();
-            v.second->plus(delta.segment(v.second->getBlockId(), v.second->localDimension()));
-        }
-    }
-
-    double new_cost = 0.0;
-    for (auto &e : edges) {
-        e.second->computeResidual();
-        double error2 = e.second->computeError2();
-        if (e.second->getLossFunction() != nullptr) {
-            error2 = e.second->getLossFunction()->operator()(std::sqrt(error2), nullptr, nullptr);
-        }
-        new_cost += error2;
-    }
-
-    for (auto &v : vertices) {
-        if (!v.second->isSetFixed()) {
-            v.second->pop();
-        }
-    }
-
-    return new_cost;
-}
-
-void LevenbergMarquartSparseSolver::computeInitLambda() {
-    lambda_ = -std::numeric_limits<double>::infinity();
-    for (auto &block : Hrr_blocks_) {
-        for (int i = 0; i < block.second.rows(); ++i) {
-            lambda_ = std::max(block.second.operator()(i, i), lambda_);
-        }
-    }
-    for (auto &block : Hmm_blocks_) {
-        for (int i = 0; i < block.second.rows(); ++i) {
-            lambda_ = std::max(block.second.operator()(i, i), lambda_);
-        }
-    }
-    lambda_ *= 1e-5;
-    assert(lambda_ > -std::numeric_limits<double>::infinity());
-}
-
-} // namespace gopt

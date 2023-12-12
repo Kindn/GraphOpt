@@ -1,5 +1,5 @@
 /*
- * filename: LevenbergMarquartSparseSolver.h
+ * filename: LevenbergMarquartSparseShurSolver.h
  * author:   Peiyan Liu, HITSZ
  * E-mail:   1434615509@qq.com
  * brief:    
@@ -19,12 +19,12 @@ namespace gopt {
  * Bundle-Adjustment problem. All the edges in the graph should be binary edge, and
  * each of them should connect a marginalized vertex and a in-marginalized vertex.
 */
-class LevenbergMarquartSparseSolver : public OptSolverBase, public std::enable_shared_from_this<LevenbergMarquartSparseSolver> {
+class LevenbergMarquartSparseShurSolver : public OptSolverBase, public std::enable_shared_from_this<LevenbergMarquartSparseShurSolver> {
     friend class FactorGraph;
 public: 
-    LevenbergMarquartSparseSolver(): 
+    LevenbergMarquartSparseShurSolver(): 
     OptSolverBase() {}
-    virtual ~LevenbergMarquartSparseSolver() {}
+    virtual ~LevenbergMarquartSparseShurSolver() {}
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
