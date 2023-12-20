@@ -73,14 +73,14 @@ int GaussNewtonShurSolver::solve(Eigen::VectorXd &delta, double &cost, Eigen::Ve
 void GaussNewtonShurSolver::buildBlockSystem(const FactorGraph::EdgePtr & edge, 
                                           const Eigen::MatrixXd &info, 
                                           double loss_grad) {
-    for (int i = 0; i < edge->vertices_.size(); ++i) {
+    for (size_t i = 0; i < edge->vertices_.size(); ++i) {
         auto vi = edge->vertices_[i];
         size_t vi_block_id = vi->getBlockId();
         if (vi->isSetFixed()) {
             continue;
         }
 
-        for (int j = i; j < edge->vertices_.size(); ++j) {
+        for (size_t j = i; j < edge->vertices_.size(); ++j) {
             auto vj = edge->vertices_[j];
             size_t vj_block_id = vj->getBlockId();
             if (vj->isSetFixed()) {

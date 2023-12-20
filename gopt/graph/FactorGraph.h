@@ -172,7 +172,7 @@ public:
 
         virtual Eigen::MatrixXd getInformation() const;
 
-        virtual double computeError2() { return residual_.transpose() * information_ * residual_; }
+        virtual double computeError2() { return residual_.dot(information_ * residual_); }
 
         virtual Eigen::VectorXd getResidual() const { return residual_; }
 
