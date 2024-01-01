@@ -51,7 +51,11 @@ public:
 
 public: 
     FactorGraph() {};
-    ~FactorGraph() {};
+    ~FactorGraph() {
+        if (solver_ != nullptr) {
+            delete solver_;
+        }
+    };
 
     FactorGraph(const FactorGraph&) = delete;
     FactorGraph &operator = (const FactorGraph&) = delete;
@@ -221,6 +225,12 @@ public:
     */
     virtual int optimize();
 
+    /**
+     * @brief Set the optimization algorithm for the graph optimization problem 
+     * 
+     * @param solver    the solver pointer pointing to dynamically allocated memory. GOPT will 
+     *                  help you to manage the memory you allocate 
+    */
     void setOptSolver(OptSolverBase *solver) {
         assert(solver != nullptr && "Solver should not be null. ");
         solver_ = solver;
