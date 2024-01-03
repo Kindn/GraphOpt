@@ -5,8 +5,8 @@
  * brief:    
  */
 
-#ifndef _LOSS_FUNCTION_BASE_
-#define _LOSS_FUNCTION_BASE_
+#ifndef _GOPT_LOSS_FUNCTION_BASE_
+#define _GOPT_LOSS_FUNCTION_BASE_
 
 #include <memory>
 

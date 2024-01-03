@@ -1,5 +1,5 @@
-#ifndef _TIC_TOC_H_
-#define _TIC_TOC_H_
+#ifndef _GOPT_TIC_TOC_H_
+#define _GOPT_TIC_TOC_H_
 
 #include <ctime>
 #include <cstdlib>

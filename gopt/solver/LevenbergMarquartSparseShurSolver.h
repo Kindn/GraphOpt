@@ -9,8 +9,8 @@
 
 #include "solver/OptSolverBase.h"
 
-#ifndef _LEVENBERG_MARQUART_SPARSE_SOLVER_
-#define _LEVENBERG_MARQUART_SPARSE_SOLVER_
+#ifndef _GOPT_LEVENBERG_MARQUART_SPARSE_SOLVER_
+#define _GOPT_LEVENBERG_MARQUART_SPARSE_SOLVER_
 
 namespace gopt {
 

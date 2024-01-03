@@ -5,8 +5,8 @@
  * brief:    
  */
 
-#ifndef _FACTOR_GRAPH_H_
-#define _FACTOR_GRAPH_H_
+#ifndef _GOPT_FACTOR_GRAPH_H_
+#define _GOPT_FACTOR_GRAPH_H_
 
 #include <iostream>
 #include <algorithm>
@@ -16,6 +16,7 @@
 #include <assert.h>
 
 #include "util/eigen_types.h"
+#include "util/ownership.h"
 #include "loss/LossFunctionBase.h"
 
 namespace gopt {
@@ -53,7 +54,7 @@ public:
     FactorGraph() {};
     ~FactorGraph() {
         if (solver_ != nullptr) {
-            delete solver_;
+            release(solver_);
         }
     };
 

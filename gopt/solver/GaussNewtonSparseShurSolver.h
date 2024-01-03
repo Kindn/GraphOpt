@@ -9,8 +9,8 @@
 
 #include "solver/OptSolverBase.h"
 
-#ifndef _GAUSS_NEWTON_SPARSE_SOLVER_
-#define _GAUSS_NEWTON_SPARSE_SOLVER_
+#ifndef _GOPT_GAUSS_NEWTON_SPARSE_SOLVER_
+#define _GOPT_GAUSS_NEWTON_SPARSE_SOLVER_
 
 namespace gopt {
 

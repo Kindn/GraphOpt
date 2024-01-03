@@ -5,8 +5,8 @@
  * brief:    
  */
 
-#ifndef _BASE_VERTEX_H_
-#define _BASE_VERTEX_H_
+#ifndef _GOPT_BASE_VERTEX_H_
+#define _GOPT_BASE_VERTEX_H_
 
 #include <stack>
 

@@ -5,8 +5,8 @@
  * brief:    
  */
 
-#ifndef _GAUSS_NEWTON_SHUR_SOLVER_H_
-#define _GAUSS_NEWTON_SPHUR_SOLVER_H_
+#ifndef _GOPT_GAUSS_NEWTON_SHUR_SOLVER_H_
+#define _GOPT_GAUSS_NEWTON_SPHUR_SOLVER_H_
 
 #include "solver/OptSolverBase.h"
 

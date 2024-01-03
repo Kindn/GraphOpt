@@ -5,8 +5,8 @@
  * brief:    
  */
 
-#ifndef _OPT_SOLVER_BASE_
-#define _OPT_SOLVER_BASE_
+#ifndef _GOPT_OPT_SOLVER_BASE_
+#define _GOPT_OPT_SOLVER_BASE_
 
 #include <memory>
 #include <assert.h>

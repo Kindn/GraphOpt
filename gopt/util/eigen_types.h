@@ -5,8 +5,8 @@
  * brief:    Typedefs of some Eigen-related types.
  */
 
-#ifndef _EIGEN_TYPES_H_
-#define _EIGEN_TYPES_H_
+#ifndef _GOPT_EIGEN_TYPES_H_
+#define _GOPT_EIGEN_TYPES_H_
 
 #include <eigen3/Eigen/Eigen>
 #include <vector>

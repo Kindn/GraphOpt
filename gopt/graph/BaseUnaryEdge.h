@@ -5,8 +5,8 @@
  * brief:    
  */
 
-#ifndef _BASE_UNARY_EDGE_
-#define _BASE_UNARY_EDGE_
+#ifndef _GOPT_BASE_UNARY_EDGE_
+#define _GOPT_BASE_UNARY_EDGE_
 
 #include "graph/BaseEdge.h"
 

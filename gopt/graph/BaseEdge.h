@@ -5,8 +5,8 @@
  * brief:    
  */
 
-#ifndef _BASE_EDGE_
-#define _BASE_EDGE_
+#ifndef _GOPT_BASE_EDGE_
+#define _GOPT_BASE_EDGE_
 
 #include "graph/FactorGraph.h"
 

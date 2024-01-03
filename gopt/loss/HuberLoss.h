@@ -5,8 +5,8 @@
  * brief:    
  */
 
-#ifndef _HUBER_LOSS_H_
-#define _HUBER_LOSS_H_
+#ifndef _GOPT_HUBER_LOSS_H_
+#define _GOPT_HUBER_LOSS_H_
 
 #include <numeric>
 

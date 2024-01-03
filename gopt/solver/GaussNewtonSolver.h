@@ -4,8 +4,8 @@
  * E-mail:   1434615509@qq.com
  * brief:    
  */
-#ifndef _GAUSS_NEWTON_SOLVER_
-#define _GAUSS_NEWTON_SOLVER_
+#ifndef _GOPT_GAUSS_NEWTON_SOLVER_
+#define _GOPT_GAUSS_NEWTON_SOLVER_
 
 #include "solver/OptSolverBase.h"
 
