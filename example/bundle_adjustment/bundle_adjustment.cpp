@@ -187,7 +187,7 @@ void solveBA(BALProblem &bal_problem) {
         double *point = points + point_block_size * i;
         v->setId(i + bal_problem.num_cameras());
         v->setEstimate(Eigen::Vector3d(point[0], point[1], point[2]));
-        // v->setFixed(true);
+        v->setFixed(true);
         v->setMarginalized(true);
         graph.addVertex(v);
         v_p.push_back(v);

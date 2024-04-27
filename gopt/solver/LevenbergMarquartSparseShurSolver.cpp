@@ -106,18 +106,21 @@ void LevenbergMarquartSparseShurSolver::buildBlockSystem(const FactorGraph::Edge
                                           double loss_grad) {
     for (size_t i = 0; i < edge->vertices_.size(); ++i) {
         auto vi = edge->vertices_[i];
-        size_t vi_block_id = vi->getBlockId();
-        if (vi->isSetFixed()) {
-            continue;
-        }
+        const size_t vi_block_id = vi->getBlockId();
+        // if (vi->isSetFixed()) {
+        //     continue;
+        // }
 
         for (size_t j = i; j < edge->vertices_.size(); ++j) {
             auto vj = edge->vertices_[j];
-            size_t vj_block_id = vj->getBlockId();
-            if (vj->isSetFixed()) {
-                continue;
-            }
+            const size_t vj_block_id = vj->getBlockId();
+            // if (vj->isSetFixed()) {
+            //     continue;
+            // }
 
+            // std::cout << edge->getJacobian(i).rows() << " " << edge->getJacobian(i).cols() << " " 
+            //           << info.rows() << " " << info.cols() << " " 
+            //           << edge->getJacobian(j).rows() << " " << edge->getJacobian(j).cols() << std::endl; 
             Eigen::MatrixXd hessian_block = 
                 loss_grad * edge->getJacobian(i).transpose() * info * edge->getJacobian(j);
             if (i == j) {
@@ -127,6 +130,8 @@ void LevenbergMarquartSparseShurSolver::buildBlockSystem(const FactorGraph::Edge
                         Hrr_blocks_[vi_block_id] = hessian_block;
                     }
                     else {
+                        // std::cout << it->second.rows() << " " << it->second.cols() << " " 
+                        //           << hessian_block.rows() << " " << hessian_block.cols() << std::endl; 
                         it->second += hessian_block;
                     }
                 } else {

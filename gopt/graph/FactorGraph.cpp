@@ -49,9 +49,9 @@ void FactorGraph::Edge::computeJacobians() {
     const double scale = 1.0 / (2.0 * delta);
     Eigen::VectorXd residual;
     for (size_t i = 0; i < jacobians_.size(); ++i) {
-        if (vertices_[i]->isSetFixed()) {
-            continue;
-        }
+        // if (vertices_[i]->isSetFixed()) {
+        //     continue;
+        // }
 
         FactorGraph::VertexPtr v = vertices_[i];
         size_t dim_v = v->localDimension();
@@ -172,10 +172,10 @@ void FactorGraph::sortVerticesAndEdges() {
     for (auto &vertex : vertices_) {
         VertexPtr v = vertex.second;
         if (!v->set_marginalized_) {
+            v->block_id_ = keeped_vertex_block_id;
+            keeped_vertex_block_id += v->local_dimension_;
+            dim_var_ += v->local_dimension_;
             if (!v->set_fixed_) {
-                v->block_id_ = keeped_vertex_block_id;
-                keeped_vertex_block_id += v->local_dimension_;
-                dim_var_ += v->local_dimension_;
                 num_unfixed_++;
             }
         }
@@ -185,12 +185,12 @@ void FactorGraph::sortVerticesAndEdges() {
     for (auto &vertex : vertices_) {
         VertexPtr v = vertex.second;
         if (v->set_marginalized_) {
+            v->block_id_ = marginalized_vertex_block_id;
+            marginalized_vertex_block_id += v->local_dimension_;
+            dim_var_ += v->local_dimension_;
+            dim_marg_ += v->local_dimension_;
+            num_marg_++;
             if (!v->set_fixed_) {
-                v->block_id_ = marginalized_vertex_block_id;
-                marginalized_vertex_block_id += v->local_dimension_;
-                dim_var_ += v->local_dimension_;
-                dim_marg_ += v->local_dimension_;
-                num_marg_++;
                 num_unfixed_++;
             }
         }
